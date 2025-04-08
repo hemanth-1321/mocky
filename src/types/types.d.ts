@@ -40,8 +40,11 @@ interface Job {
   location: string;
   tags: string[];
   apply_url?: string;
+  description?: string;
   url: string;
   date: Date;
+  salary_min?: Int;
+  salary_max?: Int;
 }
 
 interface SignUpParams {

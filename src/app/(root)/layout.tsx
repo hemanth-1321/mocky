@@ -1,4 +1,4 @@
-import { AppBar } from '@/componnets/AppBar'
+import { AppBar } from '@/components/AppBar'
 import React, { ReactNode } from 'react'
 
 const Rootlayout = ({children}:{children:ReactNode}) => {

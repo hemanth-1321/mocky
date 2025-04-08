@@ -133,6 +133,9 @@
 @utility dark-gradient {
   @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
 }
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
 
   .card-interview {
     @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
@@ -142,3 +145,19 @@
  .badge-text {
       @apply text-sm font-semibold capitalize;
     }
+    
+  .call-view {
+  @apply flex items-center justify-center w-full h-screen;
+}
+
+.card-interviewer {
+  @apply flex flex-col items-center justify-center gap-2 p-4 h-[250px] bg-gray-400 dark:bg-gradient-to-br dark:from-blue-900 dark:to-gray-800 rounded-lg border border-gray-300;
+}
+
+.avatar {
+  @apply relative flex items-center justify-center rounded-full w-[100px] h-[100px] bg-blue-500 overflow-hidden;
+}
+
+.animate-speak {
+  @apply absolute w-[80%] h-[80%] animate-ping rounded-full bg-blue-300 opacity-75;
+}

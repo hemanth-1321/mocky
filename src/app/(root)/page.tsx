@@ -1,5 +1,5 @@
-  import { InterviewCard } from "@/componnets/InterviewCard";
-import { Button } from "@/componnets/ui/button";
+  import { InterviewCard } from "@/components/InterviewCard";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 

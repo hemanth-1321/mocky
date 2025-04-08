@@ -14,9 +14,24 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  email     String   @unique
+  email     String     @unique
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
+  Question  Question[]
+}
+
+model Question {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  position   String
+  company    String
+  location   String
+  techStack  String?
+  Questions  Json
+  salary_min Int?
+  salary_max Int?
+  createdAt  DateTime @default(now())
 }
