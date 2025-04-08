@@ -45,8 +45,14 @@ interface Job {
 }
 
 interface SignUpParams {
-  id: string;
+  id?: string;
   name: string;
+  email: string;
+  password: string;
+}
+
+interface SignInParams {
+  id?: string;
   email: string;
   password: string;
 }

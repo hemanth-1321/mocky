@@ -10,6 +10,9 @@ import Link from "next/link"
 import { toast } from "sonner"
 import { FormFiled } from "./FormFiled"
 import { useRouter } from "next/navigation"
+import { signIn, signUp } from "@/actions/auth.actions"
+import { useState } from "react"
+import { User } from "@/lib/User"
 
 const formSchema = z.object({
   name: z.string().optional(),
@@ -17,9 +20,12 @@ const formSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 })
 
-export const AuthForm = ({ type }: { type: string }) => {
+export const AuthForm =async ({ type }: { type: string }) => {
+      const router=useRouter()      
+   
+  const [loading, setLoading] = useState(false);
+
   const isSignin = type === "signin"
-  const router=useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,24 +35,37 @@ export const AuthForm = ({ type }: { type: string }) => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
     console.log("Form submitted")
     console.log(values)
 
     try {
       if (type === "signup") {
         console.log("Signup", values)
+          await signUp({
+        name: values.name ?? "",
+        email: values.email,
+        password: values.password,
+      })
+
         toast.success("Signed up successfully! Please Login")
    router.push("/sign-in")
       } else if (type === "signin") {
         console.log("Signin", values)
+        await signIn({
+        email: values.email,
+        password: values.password,
+      })
         toast.success("Signed in successfully!")
       router.push("/")
       }
     } catch (error: any) {
       console.log("Error:", error)
       toast.error(`An error occurred: ${error.message}`)
-    }
+    }finally {
+    setLoading(false)
+  }
   }
 
   return (
@@ -84,9 +103,10 @@ export const AuthForm = ({ type }: { type: string }) => {
             type="password"
             control={form.control}
           />
-          <Button type="submit" className="w-full mt-4 cursor-pointer">
-            {isSignin ? "Sign in" : "Create new account"}
+         <Button type="submit" className="w-full mt-4 cursor-pointer" disabled={loading}>
+           {loading ? "Loading..." : isSignin ? "Sign in" : "Create new account"}
           </Button>
+
         </form>
       </Form>
 
