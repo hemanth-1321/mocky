@@ -9,16 +9,17 @@ import { Form } from "@/componnets/ui/form"
 import Link from "next/link"
 import { toast } from "sonner"
 import { FormFiled } from "./FormFiled"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-  name: z.string().min(2).max(50).optional(),
+  name: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(1, { message: "Password is required" }),
 })
 
 export const AuthForm = ({ type }: { type: string }) => {
   const isSignin = type === "signin"
-
+  const router=useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,10 +36,12 @@ export const AuthForm = ({ type }: { type: string }) => {
     try {
       if (type === "signup") {
         console.log("Signup", values)
-        toast.success("Signed up successfully!")
+        toast.success("Signed up successfully! Please Login")
+   router.push("/sign-in")
       } else if (type === "signin") {
         console.log("Signin", values)
         toast.success("Signed in successfully!")
+      router.push("/")
       }
     } catch (error: any) {
       console.log("Error:", error)
@@ -47,7 +50,7 @@ export const AuthForm = ({ type }: { type: string }) => {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-gray-950 text-white p-8 rounded-xl shadow-lg border border-gray-700">
+    <div className="max-w-md mx-auto mt-10  bg-gray-400 dark:bg-gray-950  p-8 rounded-xl shadow-lg border border-gray-700">
       <Form {...form}>
         <h1 className="text-3xl font-bold text-center mb-6">
           {isSignin ? "Welcome Back" : "Create an Account"}
@@ -81,7 +84,7 @@ export const AuthForm = ({ type }: { type: string }) => {
             type="password"
             control={form.control}
           />
-          <Button type="submit" className="w-full mt-4">
+          <Button type="submit" className="w-full mt-4 cursor-pointer">
             {isSignin ? "Sign in" : "Create new account"}
           </Button>
         </form>

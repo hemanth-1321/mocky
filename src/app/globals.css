@@ -118,3 +118,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility blue-gradient-dark {
+  @apply bg-gradient-to-b from-[#171532] to-[#08090D];
+}
+
+@utility blue-gradient {
+  @apply bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE];
+}
+
+@utility border-gradient {
+  @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
+}
+@utility dark-gradient {
+  @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
+}
+
+  .card-interview {
+    @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
+  }
+
+
+ .badge-text {
+      @apply text-sm font-semibold capitalize;
+    }
