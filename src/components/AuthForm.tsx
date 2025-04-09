@@ -20,7 +20,7 @@ const formSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 })
 
-export const AuthForm =async ({ type }: { type: string }) => {
+export const AuthForm = ({ type }: { type: string }) => {
       const router=useRouter()      
    
   const [loading, setLoading] = useState(false);
