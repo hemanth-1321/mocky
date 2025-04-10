@@ -18,6 +18,16 @@ export async function GET() {
 export async function POST(req: Request) {
   const { position, company, location, description, tags, userId, amount } =
     await req.json();
+  console.log(
+    "fromserver",
+    position,
+    company,
+    location,
+    description,
+    tags,
+    userId,
+    amount
+  );
   try {
     const { text: questions } = await generateText({
       model: google("gemini-2.0-flash-001"),
