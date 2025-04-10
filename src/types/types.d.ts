@@ -59,3 +59,14 @@ interface SignInParams {
   email: string;
   password: string;
 }
+
+interface AgentProps {
+  username?: string;
+  id?: string;
+  type: string;
+}
+
+interface SavedMessaged {
+  role: "user" | "system" | "assistant";
+  content: string;
+}

@@ -12,7 +12,6 @@ import { FormFiled } from "./FormFiled"
 import { useRouter } from "next/navigation"
 import { signIn, signUp } from "@/actions/auth.actions"
 import { useState } from "react"
-import { User } from "@/lib/User"
 
 const formSchema = z.object({
   name: z.string().optional(),

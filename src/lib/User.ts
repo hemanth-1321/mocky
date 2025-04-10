@@ -1,10 +1,9 @@
-"use server";
 import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
 
-export async function User() {
-  const cookieStore = cookies();
-
-  const token = (await cookieStore).get("token");
-
-  return token;
+export async function getUserFromServer() {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return null;
+  console.log("libs", verifyToken(token));
+  return verifyToken(token);
 }

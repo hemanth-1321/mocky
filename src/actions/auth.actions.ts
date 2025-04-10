@@ -59,7 +59,11 @@ export const signIn = async (params: SignInParams) => {
       throw new Error("Invalid email or password");
     }
 
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      username: user.name,
+    });
 
     (await cookies()).set("token", token, {
       httpOnly: true,

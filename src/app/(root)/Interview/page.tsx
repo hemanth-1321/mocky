@@ -1,10 +1,13 @@
+"use client"
 import { Agent } from '@/components/Agent'
 import React from 'react'
-
- const page = () => {
+import { useSession } from '@/hoooks/useSession'
+const page = () => {
+   const user= useSession()
+   console.log("user",user  )
   return (
       <div>
-          <Agent/>
+      <Agent username={ user?.username} id={user?.id} type="generate" />
     </div>
   )
 }
