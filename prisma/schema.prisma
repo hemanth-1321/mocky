@@ -23,15 +23,17 @@ model User {
 }
 
 model Question {
-  id         String   @id @default(uuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  position   String
-  company    String
-  location   String
-  techStack  String?
-  Questions  Json
-  salary_min Int?
-  salary_max Int?
-  createdAt  DateTime @default(now())
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  position           String
+  company            String
+  location           String
+  techStack          String?
+  Questions          Json
+  salary_min         Int?
+  salary_max         Int?
+  jobId              String?
+  isQuestionsCreated Boolean  @default(false)
+  createdAt          DateTime @default(now())
 }

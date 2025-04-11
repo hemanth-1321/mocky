@@ -60,12 +60,12 @@ export const InterviewCard = () => {
                 </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-center gap-4 mt-5">
                 <p className="line-clamp-2 text-sm md:text-base mt-5">
-                {feedback?.finalAssessment ||
-                    "You haven't taken this interview yet. Take it now to improve your skills."}
+               
+                  If You haven't taken this interview yet. Take it now to improve your skills
                 </p>
 
                 <div className="mt-4 flex justify-end">
-                <Link href={feedback ? `/interview/${job.id}/feedback` : `/interview/${job.id}`}>
+                <Link href={feedback ? `/Interview/${job.id}/feedback` : `/Interview/${job.id}`}>
                     <Button className="btn-primary">
                     {feedback ? 'Check Feedback' : 'View Interview'}
                     </Button>

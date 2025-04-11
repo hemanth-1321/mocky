@@ -1,23 +1,23 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET() {
-  return Response.json(
-    {
-      success: true,
-      data: "Alive",
-    },
-    {
-      status: 200,
-    }
-  );
-}
 export async function POST(req: Request) {
-  const { position, company, location, description, tags, userId, amount } =
-    await req.json();
+  const {
+    position,
+    company,
+    location,
+    description,
+    tags,
+    userId,
+    salary_max,
+    salary_min,
+    jobId,
+    amount,
+  } = await req.json();
   console.log(
     "fromserver",
     position,
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     description,
     tags,
     userId,
+    jobId,
     amount
   );
   try {
@@ -80,7 +81,11 @@ export async function POST(req: Request) {
         company,
         location,
         userId,
+        salary_max,
+        salary_min,
+        jobId,
         Questions: parsedQuestions,
+        isQuestionsCreated: true,
       },
     });
 
@@ -104,6 +109,41 @@ export async function POST(req: Request) {
       {
         status: 500,
       }
+    );
+  }
+}
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+    const jobId = searchParams.get("jobId");
+
+    console.log("userID:", userId, "jobID:", jobId);
+
+    if (!userId || !jobId) {
+      return NextResponse.json(
+        { error: "Missing userId or jobId" },
+        { status: 400 }
+      );
+    }
+
+    const existing = await prisma.question.findFirst({
+      where: {
+        userId,
+        jobId,
+      },
+    });
+
+    return NextResponse.json({
+      question: {
+        isQuestionsCreated: !!existing,
+      },
+    });
+  } catch (error) {
+    console.error("GET /api/vapi/generate error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
     );
   }
 }

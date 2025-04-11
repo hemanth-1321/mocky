@@ -43,6 +43,7 @@ interface Job {
   description?: string;
   url: string;
   date: Date;
+  id: string;
   salary_min?: Int;
   salary_max?: Int;
 }
