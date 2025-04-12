@@ -53,4 +53,5 @@ model Feedback {
   areasForImprovement String[]
   finalAssessment     String
   isFeedbackCreated   Boolean  @default(false)
+  createdAt           DateTime @default(now())
 }

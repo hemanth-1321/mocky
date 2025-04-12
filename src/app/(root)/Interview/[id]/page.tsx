@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/hoooks/useSession";
 import { BACKEND_URL } from "@/lib/config";
 import axios from "axios";
-import { BriefcaseBusiness } from "lucide-react";
+import { BriefcaseBusiness, MessageCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -18,7 +18,9 @@ const Page = () => {
   const [isQuestionsCreated, setIsQuestionsCreated] = useState(false);
   const[questions,setquestions]=useState()
   const [loading, setLoading] = useState(false);
-const [interviewId,setInterviewid]=useState("")
+  const [interviewId, setInterviewid] = useState("")
+  const [feedbackExists, setFeedbackExists] = useState(false);
+
 const router = useRouter();
 const setQuestions = useInterviewStore((state) => state.setQuestions);
 const setInterviewId = useInterviewStore((state) => state.setInterviewId);
@@ -35,7 +37,9 @@ const setInterviewId = useInterviewStore((state) => state.setInterviewId);
   }, [id]);
 
   useEffect(() => {
-  if (user?.id && job?.id) {
+    if (user?.id && job?.id) {
+    
+      console.log("jobId",job)
     axios.get(`${BACKEND_URL}/api/vapi/generate`, {
       params: {
         userId: user.id,
@@ -87,7 +91,30 @@ const setInterviewId = useInterviewStore((state) => state.setInterviewId);
  }
 
   console.log("question",questions)
-}
+  }
+  
+  useEffect(() => {
+    console.log(interviewId,"logsss")
+  axios
+    .get(`${BACKEND_URL}/api/feedback`, {
+      params: { id: interviewId },
+    })
+    .then((res) => {
+      console.log(res.data)
+      if (res.data.isFeedbackCreated) {
+        setFeedbackExists(true);
+        console.log("Feedback exists");
+      } else {
+        setFeedbackExists(false);
+        console.log("No feedback found");
+      }
+    })
+    .catch((err) => console.error("Failed to fetch feedback:", err));
+}, [interviewId]);
+  const handleFeedBack = () => {
+    console.log(interviewId)
+    router.push(`/Interview/feedback/${interviewId}`)
+  }
   if (!job) {
     return <div className="text-center text-xl mt-10">No jobs found</div>;
   }
@@ -99,7 +126,11 @@ const setInterviewId = useInterviewStore((state) => state.setInterviewId);
         <div className="flex items-center">
           {isQuestionsCreated ? (
             <div className="flex flex-col gap-4"><span className="text-green-600 font-medium">Interview Questions generated</span>
-            <Button onClick={handleTakeInterview} variant={"ghost"}><BriefcaseBusiness />take a interview</Button></div>
+              <Button onClick={handleTakeInterview} variant={"ghost"}><BriefcaseBusiness />take a interview</Button>
+              {feedbackExists &&
+              <Button onClick={handleFeedBack} variant={"ghost"}><MessageCircle /> view Feed Back</Button>}            
+            </div>
+            
           ) : (
             <Button onClick={handleGenerateInterview} disabled={loading}>
               {loading ? "Generating..." : "Generate Interview"}

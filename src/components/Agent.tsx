@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { interviewer, vapi } from "@/lib/vapi";
 import { toast } from "sonner";
-import { CreateFeedback } from "@/lib/actions/feedback.action";
 import axios from "axios";
 import { BACKEND_URL } from "@/lib/config";
 

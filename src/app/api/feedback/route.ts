@@ -4,6 +4,7 @@ import { feedbackSchema } from "@/lib/vapi";
 import { google } from "@ai-sdk/google";
 import { PrismaClient } from "@prisma/client";
 import { generateObject } from "ai";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
     const formattedTranscript = transcript
       .map(
         (sentence: { role: any; content: any }) =>
-          `-${sentence.role}: ${sentence.content}`
+          `- ${sentence.role}: ${sentence.content}`
       )
       .join(" ");
 
@@ -33,7 +34,9 @@ export async function POST(req: Request) {
       }),
       schema: feedbackSchema,
       prompt: `
-        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Do not be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+
+        If the candidate does not respond to a question or gives minimal input, clearly mention "No response from candidate" in the relevant sections.
 
         Transcript:
         ${formattedTranscript}
@@ -44,6 +47,8 @@ export async function POST(req: Request) {
         - Problem-Solving: Ability to analyze problems and propose solutions.
         - Cultural Fit: Alignment with company values and job role.
         - Confidence and Clarity: Confidence in responses, engagement, and clarity.
+
+        Make sure your evaluation considers the presence or absence of candidate input. If a section is missing a valid response, reflect that in the score and mention it explicitly in your feedback.
       `,
       system:
         "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories.",
@@ -55,6 +60,7 @@ export async function POST(req: Request) {
         userId,
         totalScore,
         strengths,
+        categoryScores,
         areasForImprovement,
         finalAssessment,
         isFeedbackCreated: true,
@@ -81,6 +87,37 @@ export async function POST(req: Request) {
       {
         status: 500,
       }
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const url = new URL(req.url);
+    const interviewId = url.searchParams.get("id");
+
+    if (!interviewId) {
+      return NextResponse.json(
+        { success: false, error: "Missing interview ID" },
+        { status: 400 }
+      );
+    }
+
+    const feedback = await prisma.feedback.findFirst({
+      where: {
+        questionId: interviewId,
+      },
+    });
+
+    return NextResponse.json({
+      feedbackId: feedback?.id,
+      ...feedback,
+    });
+  } catch (error) {
+    console.error("Failed to fetch feedback:", error);
+    return NextResponse.json(
+      { success: false, error: "Something went wrong" },
+      { status: 500 }
     );
   }
 }
