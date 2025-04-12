@@ -8,13 +8,19 @@ import { BriefcaseBusiness } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useInterviewStore } from "@/lib/store/useInterviewStore";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const user = useSession();
   const { id } = useParams();
   const [job, setJob] = useState<Job | null>(null);
   const [isQuestionsCreated, setIsQuestionsCreated] = useState(false);
+  const[questions,setquestions]=useState()
   const [loading, setLoading] = useState(false);
+
+const router = useRouter();
+const setQuestions = useInterviewStore((state) => state.setQuestions);
 
   useEffect(() => {
     axios.get('https://remoteok.com/api')
@@ -38,6 +44,10 @@ const Page = () => {
     }).then((res) => {
       if (res.data?.question?.isQuestionsCreated) {
         setIsQuestionsCreated(true);
+      }
+      if (res.data?.question?.questions) {
+        setquestions(res.data?.question?.questions)
+
       }
     }).catch((err) => console.error("Failed to check question status:", err));
   }
@@ -67,7 +77,16 @@ const Page = () => {
       setLoading(false);
     }
   };
+  const handleTakeInterview = async () => {
+    if (questions) { 
+      setQuestions(questions)
+      router.push("/Interview")
+    } else {
+      toast.error("no Questions Found")
+ }
 
+  console.log("question",questions)
+}
   if (!job) {
     return <div className="text-center text-xl mt-10">No jobs found</div>;
   }
@@ -79,7 +98,7 @@ const Page = () => {
         <div className="flex items-center">
           {isQuestionsCreated ? (
             <div className="flex flex-col gap-4"><span className="text-green-600 font-medium">Interview Questions generated</span>
-            <Button variant={"ghost"}><BriefcaseBusiness />take a interview</Button></div>
+            <Button onClick={handleTakeInterview} variant={"ghost"}><BriefcaseBusiness />take a interview</Button></div>
           ) : (
             <Button onClick={handleGenerateInterview} disabled={loading}>
               {loading ? "Generating..." : "Generate Interview"}

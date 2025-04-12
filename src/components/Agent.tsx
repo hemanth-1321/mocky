@@ -3,9 +3,11 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { vapi } from "@/lib/vapi";
+import { interviewer, vapi } from "@/lib/vapi";
+import { toast } from "sonner";
 
-export const Agent = ({ username, id, type }: AgentProps) => {
+export const Agent = ({ username, id, questions }: AgentProps) => {
+  console.log("Questions",questions)
   const router = useRouter();
 
   enum CallStatus {
@@ -53,6 +55,7 @@ export const Agent = ({ username, id, type }: AgentProps) => {
 
   useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
+      toast.success("Your call has ended")
       router.push("/");
     }
   }, [callStatus]);
@@ -61,14 +64,25 @@ export const Agent = ({ username, id, type }: AgentProps) => {
     setCallStatus(CallStatus.CONNECTING);
     console.log(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!)
     try {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+       let formattedQuestions = "";
+      if (questions) {
+        formattedQuestions = questions
+          .map((question) => `- ${question}`)
+          .join("\n");
+      }
+      if (!questions) {
+        toast.success("No Question found")
+      }
+
+      await vapi.start(interviewer, {
         variableValues: {
-          username: username,
-          userId: id,
-        },
-      });
+          questions: formattedQuestions,
+          username:username
+        }
+      })
     } catch (err) {
       console.error("Failed to start call:", err);
+      toast.error("An error Accoured while taking interview")
       setCallStatus(CallStatus.INACTIVE);
     }
   };

@@ -137,6 +137,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       question: {
         isQuestionsCreated: !!existing,
+        questions: existing?.Questions ?? [],
       },
     });
   } catch (error) {

@@ -65,6 +65,7 @@ interface AgentProps {
   username?: string;
   id?: string;
   type: string;
+  questions?: JSON[];
 }
 
 interface SavedMessaged {
