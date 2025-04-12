@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hoooks/useSession";
+import { BACKEND_URL } from "@/lib/config";
 import axios from "axios";
 import { BriefcaseBusiness } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -15,7 +16,6 @@ const Page = () => {
   const [isQuestionsCreated, setIsQuestionsCreated] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Fetch job data from RemoteOK API
   useEffect(() => {
     axios.get('https://remoteok.com/api')
       .then((res) => {
@@ -28,10 +28,9 @@ const Page = () => {
       .catch((err) => console.error('Failed to fetch job:', err));
   }, [id]);
 
-  // Check if interview questions already exist
   useEffect(() => {
   if (user?.id && job?.id) {
-    axios.get("http://localhost:3000/api/vapi/generate", {
+    axios.get(`${BACKEND_URL}/api/vapi/generate`, {
       params: {
         userId: user.id,
         jobId: job.id,
@@ -47,7 +46,7 @@ const Page = () => {
   const handleGenerateInterview = async () => {
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:3000/api/vapi/generate', {
+      const res = await axios.post(`${BACKEND_URL}/api/vapi/generate`, {
         position: job?.position,
         company: job?.company,
         location: job?.location,
