@@ -18,10 +18,10 @@ const Page = () => {
   const [isQuestionsCreated, setIsQuestionsCreated] = useState(false);
   const[questions,setquestions]=useState()
   const [loading, setLoading] = useState(false);
-
+const [interviewId,setInterviewid]=useState("")
 const router = useRouter();
 const setQuestions = useInterviewStore((state) => state.setQuestions);
-
+const setInterviewId = useInterviewStore((state) => state.setInterviewId);
   useEffect(() => {
     axios.get('https://remoteok.com/api')
       .then((res) => {
@@ -45,9 +45,9 @@ const setQuestions = useInterviewStore((state) => state.setQuestions);
       if (res.data?.question?.isQuestionsCreated) {
         setIsQuestionsCreated(true);
       }
-      if (res.data?.question?.questions) {
+      if (res.data?.question) {
         setquestions(res.data?.question?.questions)
-
+        setInterviewid(res.data?.question?.interviewId)
       }
     }).catch((err) => console.error("Failed to check question status:", err));
   }
@@ -78,8 +78,9 @@ const setQuestions = useInterviewStore((state) => state.setQuestions);
     }
   };
   const handleTakeInterview = async () => {
-    if (questions) { 
+    if (questions&& interviewId) { 
       setQuestions(questions)
+      setInterviewId(interviewId)
       router.push("/Interview")
     } else {
       toast.error("no Questions Found")

@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
+  console.log("gemini key ", process.env.GOOGLE_GENERATIVE_AI_API_KEY);
   const {
     position,
     company,
@@ -88,7 +89,7 @@ export async function POST(req: Request) {
         isQuestionsCreated: true,
       },
     });
-
+    // console.log("inthe route", question.Questions);
     return Response.json(
       {
         success: true,
@@ -133,11 +134,12 @@ export async function GET(req: Request) {
         jobId,
       },
     });
-
+    console.log("in the get route", existing?.id);
     return NextResponse.json({
       question: {
         isQuestionsCreated: !!existing,
         questions: existing?.Questions ?? [],
+        interviewId: existing?.id,
       },
     });
   } catch (error) {

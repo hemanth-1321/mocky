@@ -10,7 +10,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import { FormFiled } from "./FormFiled"
 import { useRouter } from "next/navigation"
-import { signIn, signUp } from "@/actions/auth.actions"
+import { signIn, signUp } from "@/lib/actions/auth.actions"
 import { useState } from "react"
 
 const formSchema = z.object({

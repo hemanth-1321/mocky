@@ -65,9 +65,9 @@ export const InterviewCard = () => {
                 </p>
 
                 <div className="mt-4 flex justify-end">
-                <Link href={feedback ? `/Interview/${job.id}/feedback` : `/Interview/${job.id}`}>
-                    <Button className="btn-primary">
-                    {feedback ? 'Check Feedback' : 'View Interview'}
+                <Link href={`/Interview/${job.id}`}>
+                    <Button className="btn-primary cursor-pointer">
+                     View Interview
                     </Button>
                 </Link>
                 </div>

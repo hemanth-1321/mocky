@@ -13,9 +13,7 @@ import Link from "next/link";
           <div className="flex flex-col gap-6 max-w-lg">
            <h2 className="font-bold text-2xl">Get Interview-Ready with AI-Powered Practice & Instant Feedback</h2>
             <p className="font-semibold">Practice with real interview questions and receive instant, personalized feedback.</p>
-            <Button asChild className="btn-primary">
-              <Link href="/Interview ">Start an Interview</Link>
-            </Button>
+         
           </div>
           <Image src={"/robot.png"} alt="robo" width={400} height={400} className="max-sm:hidden"/>
         </section>

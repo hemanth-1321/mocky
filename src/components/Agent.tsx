@@ -5,9 +5,12 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { interviewer, vapi } from "@/lib/vapi";
 import { toast } from "sonner";
+import { CreateFeedback } from "@/lib/actions/feedback.action";
+import axios from "axios";
+import { BACKEND_URL } from "@/lib/config";
 
-export const Agent = ({ username, id, questions }: AgentProps) => {
-  console.log("Questions",questions)
+export const Agent = ({ username, id, questions ,interviewId }: AgentProps) => {
+  console.log("Questions",interviewId)
   const router = useRouter();
 
   enum CallStatus {
@@ -52,13 +55,39 @@ export const Agent = ({ username, id, questions }: AgentProps) => {
       vapi.off("error", onError);
     };
   }, []);
+useEffect(() => {
+  const generateFeedback = async () => {
+    if (!interviewId) {
+      console.error("interviewId is null or undefined.");
+      return;
+    }
 
-  useEffect(() => {
-    if (callStatus === CallStatus.FINISHED) {
-      toast.success("Your call has ended")
+    try {
+    const response = await axios.post(`${BACKEND_URL}/api/feedback`, {
+      interviewId,
+      userId: id || "", 
+      transcript: messages,  
+    });
+      const { success, feedBackId } = response.data;
+
+
+      if (success && feedBackId) {
+        router.push(`/Interview/feedback/${interviewId}`);
+      } else {
+        console.log("Error saving feedback");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error generating feedback:", error);
       router.push("/");
     }
-  }, [callStatus]);
+  };
+
+  if (callStatus === CallStatus.FINISHED) {
+    toast.success("Your call has ended");
+    generateFeedback();
+  }
+}, [callStatus, interviewId, id, messages, router]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
@@ -95,6 +124,8 @@ export const Agent = ({ username, id, questions }: AgentProps) => {
       console.error("Failed to stop call:", err);
     }
   };
+
+  
 
   const lastMessage = messages[messages.length - 1]?.content;
 

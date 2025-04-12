@@ -63,6 +63,7 @@ interface SignInParams {
 
 interface AgentProps {
   username?: string;
+  interviewId: string | null;
   id?: string;
   type: string;
   questions?: JSON[];
@@ -71,4 +72,11 @@ interface AgentProps {
 interface SavedMessaged {
   role: "user" | "system" | "assistant";
   content: string;
+}
+
+interface CreateFeedbackParams {
+  interviewId: string;
+  userId: string;
+  transcript: { role: string; content: string }[];
+  feedbackId?: string;
 }

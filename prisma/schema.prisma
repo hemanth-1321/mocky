@@ -20,12 +20,14 @@ model User {
   password  String
   createdAt DateTime   @default(now())
   Question  Question[]
+  Feedback  Feedback[]
 }
 
+//change model name to interview
 model Question {
-  id                 String   @id @default(uuid())
+  id                 String     @id @default(uuid())
   userId             String
-  user               User     @relation(fields: [userId], references: [id])
+  user               User       @relation(fields: [userId], references: [id])
   position           String
   company            String
   location           String
@@ -34,6 +36,21 @@ model Question {
   salary_min         Int?
   salary_max         Int?
   jobId              String?
-  isQuestionsCreated Boolean  @default(false)
-  createdAt          DateTime @default(now())
+  isQuestionsCreated Boolean    @default(false)
+  createdAt          DateTime   @default(now())
+  Feedback           Feedback[]
+}
+
+model Feedback {
+  id                  String   @id @default(uuid())
+  questionId          String
+  question            Question @relation(fields: [questionId], references: [id])
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  totalScore          Float
+  categoryScores      Json?
+  strengths           String[]
+  areasForImprovement String[]
+  finalAssessment     String
+  isFeedbackCreated   Boolean  @default(false)
 }
