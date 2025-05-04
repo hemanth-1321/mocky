@@ -1,4 +1,5 @@
 import { AppBar } from '@/components/AppBar'
+import Footer from '@/components/footer'
 import React, { ReactNode } from 'react'
 
 const Rootlayout = ({children}:{children:ReactNode}) => {
@@ -6,6 +7,7 @@ const Rootlayout = ({children}:{children:ReactNode}) => {
       <div>
           <AppBar/>
           {children}
+          <Footer/>
     </div>
   )
 }

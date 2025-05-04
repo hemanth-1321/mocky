@@ -1,125 +1,156 @@
-"use client"
+"use client";
+import React, { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { signUp, signIn } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button"
-import { Form } from "@/components/ui/form"
-import Link from "next/link"
-import { toast } from "sonner"
-import { FormFiled } from "./FormFiled"
-import { useRouter } from "next/navigation"
-import { signIn, signUp } from "@/lib/actions/auth.actions"
-import { useState } from "react"
+interface AuthFormProps {
+  type: "signup" | "signin";
+}
 
-const formSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(1, { message: "Password is required" }),
-})
+export function AuthForm({ type }: AuthFormProps) {
+  const router = useRouter();
+  const isSignup = type === "signup";
 
-export const AuthForm = ({ type }: { type: string }) => {
-      const router=useRouter()      
-   
-  const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const isSignin = type === "signin"
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-  })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setValues((prev) => ({ ...prev, [id]: value }));
+  };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
-    console.log("Form submitted")
-    console.log(values)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     try {
-      if (type === "signup") {
-        console.log("Signup", values)
-          await signUp({
-        name: values.name ?? "",
-        email: values.email,
-        password: values.password,
-      })
-
-        toast.success("Signed up successfully! Please Login")
-   router.push("/sign-in")
-      } else if (type === "signin") {
-        console.log("Signin", values)
+      if (isSignup) {
+        await signUp({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        });
+        toast.success("Signed up successfully! Please Login");
+        router.push("/sign-in");
+      } else {
         await signIn({
-        email: values.email,
-        password: values.password,
-      })
-        toast.success("Signed in successfully!")
-      router.push("/")
+          email: values.email,
+          password: values.password,
+        });
+        toast.success("Signed in successfully!");
+        router.push("/");
       }
     } catch (error: any) {
-      console.log("Error:", error)
-      toast.error(`An error occurred: ${error.message}`)
-    }finally {
-    setLoading(false)
-  }
-  }
+      toast.error(error?.message || "Something went wrong.");
+    }
+  };
 
   return (
-    <div className="max-w-md mx-auto mt-10  bg-gray-400 dark:bg-gray-950  p-8 rounded-xl shadow-lg border border-gray-700">
-      <Form {...form}>
-        <h1 className="text-3xl font-bold text-center mb-6">
-          {isSignin ? "Welcome Back" : "Create an Account"}
-        </h1>
+    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
+        {isSignup ? "Create an account" : "Welcome back"}
+      </h2>
+      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+        {isSignup
+          ? "Sign up to get started with Aceternity."
+          : "Login to your account to continue."}
+      </p>
 
-        <form
-          onSubmit={form.handleSubmit(onSubmit, (errors) => {
-            console.log("Form errors", errors)
-          })}
-          className="space-y-6"
-        >
-          {!isSignin && (
-            <FormFiled
-              name="name"
-              label="Full Name"
-              placeholder="Enter your name"
-              control={form.control}
+      <form className="my-8" onSubmit={handleSubmit}>
+        {isSignup && (
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              placeholder="John Doe"
+              type="text"
+              value={values.name}
+              onChange={handleChange}
+              required
             />
-          )}
-          <FormFiled
-            name="email"
-            label="Email"
-            placeholder="email@xyz.com"
+          </LabelInputContainer>
+        )}
+
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="email">Email Address</Label>
+          <Input
+            id="email"
+            placeholder="you@example.com"
             type="email"
-            control={form.control}
+            value={values.email}
+            onChange={handleChange}
+            required
           />
-          <FormFiled
-            name="password"
-            label="Password"
-            placeholder="Password@123"
+        </LabelInputContainer>
+
+        <LabelInputContainer className="mb-8">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            placeholder="••••••••"
             type="password"
-            control={form.control}
+            value={values.password}
+            onChange={handleChange}
+            required
           />
-         <Button type="submit" className="w-full mt-4 cursor-pointer" disabled={loading}>
-           {loading ? "Loading..." : isSignin ? "Sign in" : "Create new account"}
-          </Button>
+        </LabelInputContainer>
 
-        </form>
-      </Form>
-
-      <div className="text-center mt-6">
-        <p className="text-sm text-gray-400 mb-2">
-          {isSignin ? "No account yet?" : "Already have an account?"}
-        </p>
-        <Link
-          href={isSignin ? "/sign-up" : "/sign-in"}
-          className="text-blue-500 hover:underline font-medium"
+        <button
+          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+          type="submit"
         >
-          {isSignin ? "Sign up" : "Sign in"}
-        </Link>
-      </div>
+          {isSignup ? "Sign up" : "Sign in"} &rarr;
+          <BottomGradient />
+        </button>
+
+        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+
+        <p className="text-center text-sm text-neutral-600 dark:text-neutral-300">
+          {isSignup ? (
+            <>
+              Already have an account?{" "}
+              <a href="/sign-in" className="font-medium text-blue-600 hover:underline">
+                Sign in
+              </a>
+            </>
+          ) : (
+            <>
+              Don’t have an account?{" "}
+              <a href="/sign-up" className="font-medium text-blue-600 hover:underline">
+                Create one
+              </a>
+            </>
+          )}
+        </p>
+      </form>
     </div>
-  )
+  );
 }
+
+const BottomGradient = () => (
+  <>
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+  </>
+);
+
+const LabelInputContainer = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={cn("flex w-full flex-col space-y-2", className)}>
+      {children}
+    </div>
+  );
+};

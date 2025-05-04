@@ -31,7 +31,6 @@ export const signUp = async (params: SignUpParams) => {
     const token = generateToken({ id: user.id, email: user.email });
 
     (await cookies()).set("token", token, {
-      httpOnly: true,
       sameSite: "strict",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
@@ -75,5 +74,7 @@ export const signIn = async (params: SignInParams) => {
     return { id: user.id, email: user.email, name: user.name };
   } catch (error) {
     console.log("error while Signin", error);
+
+    throw error;
   }
 };

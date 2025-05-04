@@ -10,22 +10,26 @@ import dayjs from 'dayjs'
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Calendar, Star } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Page = () => {
   const user = useSession();
   const params = useParams();
   const id = params?.id as string;
+  const[loading,setLoading]=useState(false)
 
   const [feedback, setFeedback] = useState<any>(null);
 
   useEffect(() => {
     const fetchFeedback = async () => {
+      setLoading(true)
       try {
         const response = await axios.get(`${BACKEND_URL}/api/feedback`, {
           params: { id }, 
         });
-        console.log("API Response:", response.data);
+        console.log("Api response:", response.data);
         setFeedback(response.data);
+        setLoading(false)
       } catch (err) {
         console.error("Failed to fetch feedback:", err);
       }
@@ -37,8 +41,35 @@ const Page = () => {
   console.log("User ID from session:", user?.id);
   console.log("Interview ID from params:", id);
 
+  const renderSkeleton = () => (
+    <div className="h-screen max-w-4xl mx-auto mt-20 p-4 md:p-8">
+      <Skeleton className="h-8 w-3/4 mb-4" /> 
+      <Skeleton className="h-4 w-1/2 mb-2" /> 
+      <Skeleton className="h-4 w-1/3 mb-6" /> 
+      <div className="flex gap-2">
+        <Skeleton className="h-6 w-20" /> 
+        <Skeleton className="h-6 w-20" />
+        <Skeleton className="h-6 w-20" />
+      </div>
+      <Skeleton className="h-24 mt-6" /> 
+      <Skeleton className="h-8 w-3/4 mb-4" /> 
+      <Skeleton className="h-4 w-1/2 mb-2" /> 
+      <Skeleton className="h-4 w-1/3 mb-6" /> 
+      <div className="flex gap-2">
+        <Skeleton className="h-6 w-20" /> 
+        <Skeleton className="h-6 w-20" />
+        <Skeleton className="h-6 w-20" />
+      </div>
+      <Skeleton className="h-24 mt-6" /> 
+    </div>
+  );
+  
+  if ( loading) {
+    return renderSkeleton(); 
+  }
+
   return (
-      <section className="flex flex-col gap-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7">
+      <section className="flex flex-col gap-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7 mt-20">
       <div className="flex flex-row justify-center">
         <h1 className="text-4xl font-semibold">
           Feedback on the Interview
@@ -106,7 +137,7 @@ const Page = () => {
         </ul>
       </div>
 
-      <div className="buttons">
+      <div className="buttons mb-4">
         <Button className="btn-secondary flex-1">
           <Link href="/" className="flex w-full justify-center">
             <p className="text-sm font-semibold text-primary-200 text-center">

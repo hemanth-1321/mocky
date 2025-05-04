@@ -11,6 +11,7 @@ export function useSession() {
       .then((res) => {
         console.log("User data:", res.data); // Logging response
         setUser(res.data);
+        
       })
 
       .catch(() => setUser(null));

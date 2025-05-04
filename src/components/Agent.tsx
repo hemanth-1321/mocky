@@ -9,6 +9,7 @@ import axios from "axios";
 import { BACKEND_URL } from "@/lib/config";
 
 export const Agent = ({ username, id, questions ,interviewId }: AgentProps) => {
+  console.log("hiihihi",id,interviewId)
   console.log("Questions",interviewId)
   const router = useRouter();
 
@@ -119,6 +120,7 @@ useEffect(() => {
     setCallStatus(CallStatus.FINISHED);
     try {
       await vapi.stop();
+      router.push(`Interview/feedback/${interviewId}`)
     } catch (err) {
       console.error("Failed to stop call:", err);
     }
@@ -130,9 +132,11 @@ useEffect(() => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-4">
-        {/* AI Avatar */}
-        <div className="flex flex-col items-center justify-center w-64 h-64 p-4 bg-gray-400 dark:bg-gray-800 rounded-xl shadow-md">
+      <div className="flex flex-col md:flex-col items-center justify-center gap-6 p-4 h-screen">
+       
+
+       <div className="flex flex-col md:flex-row lg:flex-row gap-4">
+       <div className="flex flex-col items-center justify-center w-64 h-64 p-4 bg-gray-400 dark:bg-gray-800 rounded-xl shadow-md">
           <div className="relative flex items-center justify-center w-24 h-24 bg-blue-500 rounded-full overflow-hidden">
             <Image
               src="/ai-avatar.png"
@@ -162,6 +166,7 @@ useEffect(() => {
           <p className="mt-6 text-lg font-semibold text-gray-900 dark:text-white">You</p>
         </div>
 
+       </div>
         {/* Message Display */}
         {messages.length > 0 && (
           <div className="border border-gray-400 p-2 rounded-2xl w-full">
@@ -172,10 +177,8 @@ useEffect(() => {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Call Button */}
-      <div className="w-full flex justify-center mt-8">
+<div className="w-full flex justify-center mt-8">
         <Button
           onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
           disabled={callStatus === CallStatus.CONNECTING}
@@ -187,6 +190,9 @@ useEffect(() => {
             : "Call"}
         </Button>
       </div>
+      </div>
+
+     
     </>
   );
 };
