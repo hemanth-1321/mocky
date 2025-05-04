@@ -121,6 +121,8 @@ const Page = () => {
         jobId: job?.id,
       });
       setIsQuestionsCreated(true);
+      window.location.reload();
+
       toast.success("Interview generated");
     } catch (err) {
       console.error("Failed to generate interview:", err);
@@ -162,19 +164,19 @@ const Page = () => {
               <span className="text-green-600 font-medium">
                 Interview Questions generated
               </span>
-              <Button onClick={handleTakeInterview} variant="ghost">
-                <BriefcaseBusiness className="mr-2 h-4 w-4" />
+              <Button className="cursor-pointer" onClick={handleTakeInterview} variant="ghost">
+                <BriefcaseBusiness className="mr-2 h-4 w-4 " />
                 Take Interview
               </Button>
               {feedbackExists && (
-                <Button onClick={handleFeedBack} variant="ghost">
-                  <MessageCircle className="mr-2 h-4 w-4" />
+                <Button onClick={handleFeedBack} variant="ghost" className="cursor-pointer">
+                  <MessageCircle className="mr-2 h-4 w-4 " />
                   View Feedback
                 </Button>
               )}
             </div>
           ) : (
-            <Button onClick={handleGenerateInterview} disabled={loading}>
+            <Button onClick={handleGenerateInterview} disabled={loading} className="cursor-pointer">
               {loading ? "Generating..." : "Generate Interview"}
             </Button>
           )}

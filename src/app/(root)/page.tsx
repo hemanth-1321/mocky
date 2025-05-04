@@ -2,11 +2,22 @@
 
 import { InfiniteMovingCardsDemo } from "@/components/InfiniteMovingCard";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { useSession } from "@/hoooks/useSession";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Home() {
   const router = useRouter();
+  const user=useSession()
+  const handleGetstarted=()=>{
+    if(user){
+      router.push("/jobs")
+    }else{
+      console.log("LOGION KARO")
+      toast.error("Please Login")
+    }
+  }
 
   return (
     <div>   
@@ -20,10 +31,8 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button 
-            onClick={()=>{
-              router.push("/jobs")
-            }}
-            className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition">
+            onClick={handleGetstarted}
+            className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition cursor-pointer">
               Get Started
             </button>
             <button className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition">

@@ -17,6 +17,7 @@ export function InfiniteMovingCardsDemo() {
 
 const testimonials = [
     {
+      
       quote:
         "This platform gave me a real edge. Practicing with questions pulled from actual job listings helped me land my first tech role!",
       name: "Anjali Mehta",

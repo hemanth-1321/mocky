@@ -242,7 +242,7 @@ export const NavbarLogo = () => {
         width={30}
         height={30}
       />
-      <span className="font-bold text-black dark:text-white">Mocky.AI</span>
+      <span className="font-bold text-xl text-black dark:text-white">Mocky.AI</span>
     </a>
   );
 };
