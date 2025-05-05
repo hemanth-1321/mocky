@@ -59,7 +59,7 @@ export function AuthForm({ type }: AuthFormProps) {
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
         {isSignup
-          ? "Sign up to get started with Aceternity."
+          ? "Sign up to get started with MockyAI."
           : "Login to your account to continue."}
       </p>
 
