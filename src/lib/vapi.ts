@@ -1,10 +1,11 @@
 import Vapi from "@vapi-ai/web";
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 import { z } from "zod";
+
 export const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN!);
 
 export const interviewer: CreateAssistantDTO = {
-  name: "Interviewer",
+  name: "neha",
   firstMessage:
     "Hello! {{username}},Am Neha your Interviewer,Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
   transcriber: {

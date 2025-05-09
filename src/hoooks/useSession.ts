@@ -9,7 +9,7 @@ export function useSession() {
     axios
       .get("/api/me", { withCredentials: true })
       .then((res) => {
-        console.log("User data:", res.data); // Logging response
+        console.log("User data:", res.data); 
         setUser(res.data);
       })
 

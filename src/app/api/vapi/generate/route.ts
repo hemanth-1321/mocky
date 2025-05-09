@@ -137,7 +137,7 @@ export async function GET(req: Request) {
     console.log("in the get route", existing?.id);
     return NextResponse.json({
       question: {
-        isQuestionsCreated: !!existing,
+        isQuestionsCreated: existing ? true : false,
         questions: existing?.Questions ?? [],
         interviewId: existing?.id,
       },

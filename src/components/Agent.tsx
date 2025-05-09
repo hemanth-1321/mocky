@@ -7,6 +7,7 @@ import { interviewer, vapi } from "@/lib/vapi";
 import { toast } from "sonner";
 import axios from "axios";
 import { BACKEND_URL } from "@/lib/config";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export const Agent = ({ username, id, questions ,interviewId }: AgentProps) => {
   console.log("hiihihi",id,interviewId)
@@ -91,7 +92,6 @@ useEffect(() => {
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
-    console.log(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!)
     try {
        let formattedQuestions = "";
       if (questions) {
@@ -137,9 +137,9 @@ useEffect(() => {
 
        <div className="flex flex-col md:flex-row lg:flex-row gap-4">
        <div className="flex flex-col items-center justify-center w-64 h-64 p-4 bg-gray-400 dark:bg-gray-800 rounded-xl shadow-md">
-          <div className="relative flex items-center justify-center w-24 h-24 bg-blue-500 rounded-full overflow-hidden">
+          <div className="relative flex items-center justify-center w-24 h-24 bg-black   rounded-full overflow-hidden">
             <Image
-              src="/ai-avatar.png"
+              src="/hero1.png"
               alt="AI Avatar"
               width={60}
               height={60}
@@ -152,22 +152,19 @@ useEffect(() => {
           <h1 className="mt-6 font-bold text-gray-900 dark:text-white">AI Interviewer</h1>
         </div>
 
-        {/* User Avatar */}
         <div className="flex flex-col items-center justify-center w-64 h-64 p-4 bg-gray-400 dark:bg-gray-900 rounded-xl shadow-md">
-          <div className="flex items-center justify-center w-24 h-24 bg-blue-500 rounded-full overflow-hidden">
-            <Image
-              src="/user-avatar.png"
-              alt="User Avatar"
-              width={90}
-              height={90}
-              className="rounded object-cover"
-            />
-          </div>
-          <p className="mt-6 text-lg font-semibold text-gray-900 dark:text-white">You</p>
-        </div>
+  <div className="flex items-center justify-center w-24 h-24 rounded-full overflow-hidden">
+    <Avatar className="w-24 h-24 text-lg">
+      <AvatarFallback className="text-white bg-black w-full h-full flex items-center justify-center rounded-full">
+        {username?.toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  </div>
+  <p className="mt-6 text-lg font-semibold text-gray-900 dark:text-white">You</p>
+</div>
+
 
        </div>
-        {/* Message Display */}
         {messages.length > 0 && (
           <div className="border border-gray-400 p-2 rounded-2xl w-full">
             <div className="rounded-2xl min-h-12 px-5 py-3 flex items-center justify-center">

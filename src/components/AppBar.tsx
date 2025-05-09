@@ -18,7 +18,7 @@ import { useSession } from "@/hoooks/useSession";
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
+  AvatarImage, 
 } from "@/components/ui/avatar";
 
 export function AppBar() {

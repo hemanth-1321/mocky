@@ -42,7 +42,7 @@ export default function Home() {
         </div>
 
         <div className="mt-10 lg:mt-0 lg:ml-16">
-          <Image src="/robot.png" alt="Interview Illustration" width={500} height={400} />
+          <Image src="/hero1.png" alt="Interview Illustration" width={500} height={400} />
         </div>
       </section>
 

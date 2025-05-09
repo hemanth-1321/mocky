@@ -1,5 +1,3 @@
-// pages/api/feedback.js
-
 import { feedbackSchema } from "@/lib/vapi";
 import { google } from "@ai-sdk/google";
 import { PrismaClient } from "@prisma/client";
@@ -11,6 +9,7 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const { interviewId, userId, transcript } = await req.json();
+    console.log("transcript", transcript);
     console.log("gemini key ", process.env.GOOGLE_GENERATIVE_AI_API_KEY);
 
     const formattedTranscript = transcript
