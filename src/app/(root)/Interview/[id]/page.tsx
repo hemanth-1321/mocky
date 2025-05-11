@@ -34,6 +34,7 @@ const JobDetailSkeleton = () => (
 const Page = () => {
   const user = useSession();
   const { id } = useParams();
+  console.log(id)
   const [job, setJob] = useState<Job | null>(null);
   const [isQuestionsCreated, setIsQuestionsCreated] = useState(false);
   const [questions, setquestions] = useState();

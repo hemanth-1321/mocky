@@ -10,6 +10,7 @@ import { BACKEND_URL } from "@/lib/config";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export const Agent = ({ username, id, questions ,interviewId }: AgentProps) => {
+
   console.log("hiihihi",id,interviewId)
   console.log("Questions",interviewId)
   const router = useRouter();
@@ -42,7 +43,9 @@ export const Agent = ({ username, id, questions ,interviewId }: AgentProps) => {
 
     vapi.on("call-start", onCallStart);
     vapi.on("call-end", onCallEnd);
-    vapi.on("message", onMessage);
+    vapi.on("message", (message)=>{
+  console.log("message",message)
+    });
     vapi.on("speech-start", onSpeechStart);
     vapi.on("speech-end", onSpeechEnd);
     vapi.on("error", onError);
@@ -177,6 +180,7 @@ useEffect(() => {
 
 <div className="w-full flex justify-center mt-8">
         <Button
+        className="cursor-pointer"
           onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
           disabled={callStatus === CallStatus.CONNECTING}
         >
