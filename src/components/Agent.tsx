@@ -152,7 +152,7 @@ useEffect(() => {
               <span className="absolute w-4/5 h-4/5 rounded-full bg-blue-300 opacity-75 animate-ping" />
             )}
           </div>
-          <h1 className="mt-6 font-bold text-gray-900 dark:text-white">AI Interviewer</h1>
+          <h1 className="mt-6 font-bold text-gray-900 dark:text-white">Neha</h1>
         </div>
 
         <div className="flex flex-col items-center justify-center w-64 h-64 p-4 bg-gray-400 dark:bg-gray-900 rounded-xl shadow-md">
@@ -185,10 +185,10 @@ useEffect(() => {
           disabled={callStatus === CallStatus.CONNECTING}
         >
           {callStatus === CallStatus.ACTIVE
-            ? "End Call"
+            ? "End "
             : callStatus === CallStatus.CONNECTING
             ? "Connecting..."
-            : "Call"}
+            : "start"}
         </Button>
       </div>
       </div>
