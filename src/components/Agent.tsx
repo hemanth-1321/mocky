@@ -106,6 +106,7 @@ useEffect(() => {
         toast.success("No Question found")
       }
 
+     
       await vapi.start(interviewer, {
         variableValues: {
           questions: formattedQuestions,

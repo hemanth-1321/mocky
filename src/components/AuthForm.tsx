@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { signUp, signIn } from "@/lib/actions/auth.actions";
 import { toast } from "sonner";
-
 
 interface AuthFormProps {
   type: "signup" | "signin";
@@ -22,6 +22,8 @@ export function AuthForm({ type }: AuthFormProps) {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setValues((prev) => ({ ...prev, [id]: value }));
@@ -29,6 +31,7 @@ export function AuthForm({ type }: AuthFormProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       if (isSignup) {
@@ -49,6 +52,8 @@ export function AuthForm({ type }: AuthFormProps) {
       }
     } catch (error: any) {
       toast.error(error?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,11 +108,43 @@ export function AuthForm({ type }: AuthFormProps) {
         </LabelInputContainer>
 
         <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
           type="submit"
+          disabled={loading}
+          className={cn(
+            "group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]",
+            loading ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+          )}
         >
-          {isSignup ? "Sign up" : "Sign in"} &rarr;
-          <BottomGradient />
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                ></path>
+              </svg>
+              Loading...
+            </span>
+          ) : (
+            <>
+              {isSignup ? "Sign up" : "Sign in"} &rarr;
+              <BottomGradient />
+            </>
+          )}
         </button>
 
         <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
@@ -148,9 +185,5 @@ const LabelInputContainer = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  return (
-    <div className={cn("flex w-full flex-col space-y-2", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("flex w-full flex-col space-y-2", className)}>{children}</div>;
 };
