@@ -37,9 +37,10 @@ pnpm install
 ## Environment Variables
 
 Create a .env file in the root and add your API keys:
-
+```bash
 JWT_SECRET=secret
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
 DATABASE_URL=your_postgresql_connection
 GOOGLE_GENERATIVE_AI_API_KEY=gemini_api_key
 NEXT_PUBLIC_VAPI_WEB_TOKEN=your_vapi_web_token
+```
