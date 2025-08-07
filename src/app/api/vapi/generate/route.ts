@@ -113,40 +113,6 @@ export async function POST(req: Request) {
     );
   }
 }
-export async function GET(req: Request) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-    const jobId = searchParams.get("jobId");
 
-    console.log("userID:", userId, "jobID:", jobId);
 
-    if (!userId || !jobId) {
-      return NextResponse.json(
-        { error: "Missing userId or jobId" },
-        { status: 400 }
-      );
-    }
-
-    const existing = await prisma.question.findFirst({
-      where: {
-        userId,
-        jobId,
-      },
-    });
-    console.log("in the get route", existing?.id);
-    return NextResponse.json({
-      question: {
-        isQuestionsCreated: existing ? true : false,
-        questions: existing?.Questions ?? [],
-        interviewId: existing?.id,
-      },
-    });
-  } catch (error) {
-    console.error("GET /api/vapi/generate error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
+exp
